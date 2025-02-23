@@ -13,10 +13,10 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 nltk.download('words', quiet=True)
 WORD_SET = set(words.words())
 PS = PorterStemmer()
-# Precompile the token regex
+
 TOKEN_PATTERN = re.compile(r"[a-zA-Z0-9']+")
 
-# Adjust your base path here
+
 BASE_PATH = r"C:\Users\lolly\OneDrive\Desktop\Projects\CS121\A3\cs_121_A3\.gitignore\DEV"
 
 def tokenize(text):

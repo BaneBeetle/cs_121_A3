@@ -1,3 +1,5 @@
+# index.py: Builds and stores the inverted index (milestone 1)
+
 import os
 import json
 import re
@@ -12,6 +14,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 # Download required NLTK data and initialize objects
 nltk.download('words', quiet=True)
 WORD_SET = set(words.words())
+
 PS = PorterStemmer()
 # Precompile the token regex
 TOKEN_PATTERN = re.compile(r"[a-zA-Z0-9']+")
@@ -25,7 +28,7 @@ def tokenize(text):
     result = []
     for token in tokens:
         token = token.replace("'", "").lower()
-        if token in WORD_SET:
+        if token in WORD_SET:  # Could be overly strict and exclude proper nouns like UCI, abbreviations
             result.append(PS.stem(token))
     return result
 
@@ -41,11 +44,14 @@ def process_file(file_info):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             json_data = json.load(f)
+
         # Use lxml parser for faster processing (install lxml if not already)
         soup = BeautifulSoup(json_data["content"], 'lxml')
+
         # Normal text tokens
         normal_text = soup.get_text(" ", strip=True)
         normal_tokens = tokenize(normal_text)
+
         # Extract important text tokens from designated tags
         important_tags = soup.find_all(['b', 'strong', 'h1', 'h2', 'h3', 'title'])
         important_text = " ".join(tag.get_text(" ", strip=True) for tag in important_tags)
@@ -66,12 +72,13 @@ def process_file(file_info):
         print(f"Error processing {file_path}: {e}")
         return {}, None, None
 
-def writer(index, filename="index.txt"):
-    """Write the inverted index to a file."""
+def writer(index, filename="index.json"): # storing everything using JSON might be more space efficient
+    """Write the inverted index to a JSON file."""
     with open(filename, "w", encoding="utf-8") as f:
-        for token, (freq, doc_ids) in index.items():
-            line = f"{token} {freq} {' '.join(map(str, doc_ids))}\n"
-            f.write(line)
+        # for token, (freq, doc_ids) in index.items():
+            # line = f"{token} {freq} {' '.join(map(str, doc_ids))}\n"
+            # f.write(line)
+        json.dump(index, f, indent=4)
 
 def indexer():
     # Gather all JSON file paths with their assigned document IDs

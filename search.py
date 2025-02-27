@@ -9,7 +9,6 @@ def load_index():
     ''' Load the inverted index from the disk '''
     pass
 
-
 def process_query():
     """
         Process a Boolean query using the inverted index.

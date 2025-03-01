@@ -3,6 +3,7 @@
 import json
 import math
 from index import tokenize
+import time
 
 
 def load_index(index_file='index.json'):
@@ -29,7 +30,7 @@ def boolean_retrieval(query, inverted_index, top_k=5, total_docs=55393):
     for token in query_tokens:
         if token in inverted_index:
             postings = inverted_index[token]  # {doc_id: (freq, url)}
-            print(f"Token: {token}, Postings: {postings}, Type: {type(postings)}")
+            # print(f"Token: {token}, Postings: {postings}, Type: {type(postings)}") <- debugging
             # doc_sets.append(set(postings.keys()))  # collect document IDs
 
             if isinstance(postings, dict):  # Ensure postings is a dictionary
@@ -69,8 +70,11 @@ def search(query):
     inverted_index = load_index(index_file)
 
     # Perform Boolean retrieval for the query
+    start_time = time.time()
     results = boolean_retrieval(query, inverted_index)
-
+    end_time = time.time()
+    response_time = (end_time - start_time) * 1000
+    print(f"{response_time}")
     if results:
         print("Top results:")
         for url in results:
@@ -80,9 +84,12 @@ def search(query):
 
 # use this for testing
 
-# if __name__ == "__main__":
-    # index = load_index()
-    # while True:
-    # enter query using Boolean values and exit if 'exit' is input
-    # process_query
+
+if __name__ == "__main__":
+    index = load_index()
+    while True:
+        query = input("enter query using Boolean values and exit if 'exit' is input")
+        if query == "exit":
+            break
+        print(search(query))
     # print / return documents matching queries

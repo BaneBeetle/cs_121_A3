@@ -15,6 +15,7 @@ except Exception as e:
     print(f"Error loading index: {e}")
     inverted_index = {}
 
+
 @app.route('/search', methods=['GET'])
 def search():
     query = request.args.get('query', '')  # get query from front end
@@ -32,12 +33,11 @@ def search():
     # formatted_results = []
     # for doc_id, (frequency, url) in results.items():
         # formatted_results.append({
-            #"term": query,  # The search term
-            #"frequency": frequency,  # The term frequency in the document
-            #"documents": [url]  # Wrap the URL in an array
-        #})
+            # "term": query,  # The search term
+            # "frequency": frequency,  # The term frequency in the document
+            # "documents": [url]  # Wrap the URL in an array
+        # })
     return jsonify({"results": results})
-
 
 
 if __name__ == "__main__":

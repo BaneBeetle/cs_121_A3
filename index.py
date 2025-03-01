@@ -22,7 +22,8 @@ TOKEN_PATTERN = re.compile(r"[a-zA-Z0-9']+")
 # Adjust your base path here
 BASE_PATH = r"/Users/galilearuiz/Desktop/uci/inf141/Assignment3/DEV"
 
-    # r"C:\Users\lolly\OneDrive\Desktop\Projects\CS121\A3\cs_121_A3\.gitignore\DEV"
+# r"C:\Users\lolly\OneDrive\Desktop\Projects\CS121\A3\cs_121_A3\.gitignore\DEV"
+
 
 def tokenize(text):
     """Extract and stem tokens from text using precompiled regex and filter with WORD_SET."""
@@ -33,6 +34,7 @@ def tokenize(text):
         if token in WORD_SET:  # Could be overly strict and exclude proper nouns like UCI, abbreviations
             result.append(PS.stem(token))
     return result
+
 
 def process_file(file_info):
     """
@@ -82,13 +84,14 @@ def process_file(file_info):
         return {}, None, None
 
 
-def writer(index, filename="index.json"): # storing everything using JSON might be more space efficient
+def writer(index, filename="index.json"):  # storing everything using JSON might be more space efficient
     """Write the inverted index to a JSON file."""
     with open(filename, "w", encoding="utf-8") as f:
         # for token, (freq, doc_ids) in index.items():
-            # line = f"{token} {freq} {' '.join(map(str, doc_ids))}\n"
-            # f.write(line)
+        # line = f"{token} {freq} {' '.join(map(str, doc_ids))}\n"
+        # f.write(line)
         json.dump(index, f, indent=4)
+
 
 def indexer():
     # Gather all JSON file paths with their assigned document IDs
@@ -105,7 +108,7 @@ def indexer():
                 # url_map[doc_id] = os.path.relpath(file_path, BASE_PATH)
                 doc_id += 1
 
-    global_index = defaultdict(dict) # (lambda: [0, set()])  # token -> [frequency, set(doc_ids)]
+    global_index = defaultdict(dict)  # (lambda: [0, set()])  # token -> [frequency, set(doc_ids)]
     document_counter = doc_id
 
     # Use ProcessPoolExecutor to parallelize file processing
@@ -120,7 +123,7 @@ def indexer():
             for token, postings in partial_index.items():
                 if token not in global_index:
                     global_index[token] = {}
-                global_index[token].update(postings) #merges per-token doc_id mappings
+                global_index[token].update(postings)  # merges per-token doc_id mappings
 
             # for token, (freq, doc_ids) in partial_index.items():
                 # global_index[token][0] += freq
@@ -138,6 +141,7 @@ def indexer():
         f.write(f"Index size on disk: {index_size_bytes} bytes ({index_size_kb:.2f} KB)\n")
 
     return global_index
+
 
 if __name__ == "__main__":
     idx = indexer()

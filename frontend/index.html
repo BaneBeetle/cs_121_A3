@@ -8,15 +8,21 @@
 </head>
 
 <body>
-<div class="container">
+    <div class="container">
         <h1>Assignment 3 Search Engine :3 </h1>
-        <input type="text" id="searchInput" placeholder="Enter search term" />
-        <button onclick="performSearch()">Search</button> <!-- MAKE SURE IT MATCHES ; should be in main.ts -->
+        <form id="search-form">
+            <input type="text" id="query" placeholder="Enter search term" required />
+            <button type="submit">Search</button>
+        </form>
+
 
         <div id="errorMessage" class="error"></div>
         <div id="results" class="results"></div>
     </div>
+    <div class="container">
+        <p> placeholder for chat gpt api thing for extra credit if time ? :> </p>
+    </div>
 
-    <script src="main.js"></script> <!-- change when i link right file -->
+    <script src="main.js"></script> <!-- Javascript file -->
 </body>
 </html>

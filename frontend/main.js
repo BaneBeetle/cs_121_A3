@@ -1,6 +1,11 @@
 // Interface to structure the response from Flask
+var _a;
+(_a = document.getElementById('search-form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', function (event) {
+    event.preventDefault(); // prevents form from refreshing when u submit
+    performSearch();
+});
 function performSearch() {
-    var query = document.getElementById('searchInput').value;
+    var query = document.getElementById('query').value;
     var errorMessage = document.getElementById('errorMessage');
     var resultsDiv = document.getElementById('results');
     // clear previous results
@@ -38,7 +43,12 @@ function displayResults(results) {
             resultsDiv.innerHTML = "<p>No results found.</p>";
         }
         else {
-            resultsDiv.innerHTML = results.map(function (result) { return "\n                <div class=\"result\">\n                    <h3>".concat(result.term, "</h3>\n                    <p>Frequency: ").concat(result.frequency, "</p>\n                    <p>Found in documents: ").concat(result.documents.join(', '), "</p>\n                </div>\n            "); }).join('');
+            resultsDiv.innerHTML = results.map(function (url) { return "\n            <div class=\"result\">\n                    <a href=\"".concat(url, "\" target=\"_blank\">").concat(url, "</a>\n            </div>  \n            "); }).join('');
         }
     }
 }
+// <div class="result">
+//                     <h3>${result.term}</h3>
+//                     <p>Frequency: ${result.frequency}</p>
+//                     <p>Found in documents: ${result.documents.join(', ')}</p>
+//                 </div>

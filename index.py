@@ -64,7 +64,6 @@ def process_file(file_info):
         important_tokens = tokenize(important_text)
         
         # Count tokens; give extra weight (e.g., +2) for important tokens
-        token_frequencies = defaultdict(int)
         for token in normal_tokens:
             partial_index[token] += 1
         for token in important_tokens:
@@ -72,16 +71,16 @@ def process_file(file_info):
         
         # Convert to the format: {token: {doc_id: (frequency, url)}}
         # result = {token: (freq, {doc_id}) for token, freq in partial_index.items()}
-        for token, freq in token_frequencies.items():
-            partial_index[token][doc_id] = (freq, url)
+        final_index = {token: {doc_id: (partial_index[token], url)} for token in partial_index}
 
         rel_path = os.path.relpath(file_path, base_path)
         print(f"Finished processing: {rel_path} with ID: {doc_id}")
-        return partial_index, doc_id, rel_path
+        return final_index, doc_id, rel_path
 
     except Exception as e:
         print(f"Error processing {file_path}: {e}")
         return {}, None, None
+
 
 def writer(index, filename="index.json"): # storing everything using JSON might be more space efficient
     """Write the inverted index to a JSON file."""

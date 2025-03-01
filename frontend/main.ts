@@ -6,8 +6,13 @@ interface SearchResult {
     documents: number[];
 }
 
+document.getElementById('search-form')?.addEventListener('submit', function (event) {
+    event.preventDefault();  // prevents form from refreshing when u submit
+    performSearch();
+});
+
 function performSearch(): void {
-    const query = (document.getElementById('searchInput') as HTMLInputElement).value;
+    const query = (document.getElementById('query') as HTMLInputElement).value;
     const errorMessage = document.getElementById('errorMessage');
     const resultsDiv = document.getElementById('results');
 
@@ -37,19 +42,22 @@ function performSearch(): void {
         });
 }
 
-function displayResults(results: SearchResult[]): void {
+function displayResults(results: string[]): void {
     const resultsDiv = document.getElementById('results');
     if (resultsDiv) {
         if (results.length === 0) {
             resultsDiv.innerHTML = "<p>No results found.</p>";
         } else {
-            resultsDiv.innerHTML = results.map(result => `
-                <div class="result">
-                    <h3>${result.term}</h3>
-                    <p>Frequency: ${result.frequency}</p>
-                    <p>Found in documents: ${result.documents.join(', ')}</p>
-                </div>
+            resultsDiv.innerHTML = results.map(url => `
+            <div class="result">
+                    <a href="${url}" target="_blank">${url}</a>
+            </div>  
             `).join('');
         }
     }
 }
+// <div class="result">
+//                     <h3>${result.term}</h3>
+//                     <p>Frequency: ${result.frequency}</p>
+//                     <p>Found in documents: ${result.documents.join(', ')}</p>
+//                 </div>

@@ -3,6 +3,7 @@
 from flask import Flask, request, jsonify
 from search import boolean_retrieval, load_index
 from flask_cors import CORS
+import time
 
 app = Flask(__name__)
 CORS(app)
@@ -20,8 +21,13 @@ def search():
     if not query:
         return jsonify({"error": "No search term provided"}), 400
 
+    start_time = time.time()
+
     # Perform Boolean retrieval with tf-idf ranking
     results = boolean_retrieval(query, inverted_index)
+    end_time = time.time()
+    response_time = (end_time - start_time) * 1000
+    print(f"Search query: '{query}', Response time: {response_time:.2f} ms")
 
     # formatted_results = []
     # for doc_id, (frequency, url) in results.items():

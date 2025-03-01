@@ -19,16 +19,19 @@ function performSearch() {
             errorMessage.textContent = "Please enter a search term.";
         return;
     }
+    var startTime = performance.now();
     // make a request to Flask backend
     fetch("http://127.0.0.1:5000/search?query=".concat(encodeURIComponent(query)))
         .then(function (response) { return response.json(); })
         .then(function (data) {
+        var endTime = performance.now(); // End timer
+        var responseTime = (endTime - startTime).toFixed(2);
         if (data.error) {
             if (errorMessage)
                 errorMessage.textContent = data.error;
             return;
         }
-        displayResults(data.results);
+        displayResults(data.results, responseTime);
     })
         .catch(function (error) {
         if (errorMessage)
@@ -36,14 +39,14 @@ function performSearch() {
         console.error('Error:', error);
     });
 }
-function displayResults(results) {
+function displayResults(results, responseTime) {
     var resultsDiv = document.getElementById('results');
     if (resultsDiv) {
         if (results.length === 0) {
             resultsDiv.innerHTML = "<p>No results found.</p>";
         }
         else {
-            resultsDiv.innerHTML = results.map(function (url) { return "\n            <div class=\"result\">\n                    <a href=\"".concat(url, "\" target=\"_blank\">").concat(url, "</a>\n            </div>  \n            "); }).join('');
+            resultsDiv.innerHTML = "<p>Response Time: ".concat(responseTime, " ms</p>") + results.map(function (url) { return "\n            <div class=\"result\">\n                    <a href=\"".concat(url, "\" target=\"_blank\">").concat(url, "</a>\n            </div>  \n            "); }).join('');
         }
     }
 }

@@ -22,6 +22,14 @@ def search():
     if not query:
         return jsonify({"error": "No search term provided"}), 400
 
+    print("First 20 words in the inverted index:", list(inverted_index.keys())[:20])
+    print("Checking inverted index for query terms:", query)
+    for term in query.split():
+        if term in inverted_index:
+            print(f"Term '{term}' exists in the index with {len(inverted_index[term])} postings.")
+        else:
+            print(f"Term '{term}' is NOT in the index.")
+
     start_time = time.time()
 
     # Perform Boolean retrieval with tf-idf ranking

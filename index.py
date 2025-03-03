@@ -31,8 +31,9 @@ def tokenize(text):
     result = []
     for token in tokens:
         token = token.replace("'", "").lower()
-        if token in WORD_SET:  # Could be overly strict and exclude proper nouns like UCI, abbreviations
-            result.append(PS.stem(token))
+        stemmed_token = PS.stem(token)
+        # if stemmed_token in WORD_SET:  # changed to add stemmed toke
+        result.append(stemmed_token)
     return result
 
 

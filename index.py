@@ -1,3 +1,6 @@
+# Brian Phan
+# 84609992
+
 import os
 import json
 import re
@@ -107,5 +110,4 @@ def indexer():
     return final_index
 
 if __name__ == "__main__":
-    idx = indexer()
-    writer(idx)
+    writer(indexer())

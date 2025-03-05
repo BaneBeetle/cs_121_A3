@@ -5,22 +5,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>skibidi search engine hahahahahhahahah</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Body styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #DAD7CD;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container for all content */
+        .container {
+            text-align: center;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* Search Box */
+        h1 {
+            color: #344E41;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        #query {
+            padding: 10px;
+            font-size: 1.1em;
+            border: 2px solid #efefef;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 1.1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Error message */
+        .error {
+            color: red;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        /* Results styling */
+        .results {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Each result card */
+        .result-item {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            font-size: 1.1em;
+            transition: box-shadow 0.3s;
+        }
+
+        .result-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-item a {
+            color: #A3B18A;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .result-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Add spacing between the form and results */
+        .container form,
+        .container .results {
+            margin-bottom: 30px;
+        }
+
+    </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Assignment 3 Search Engine :3 </h1>
+        <h1>Assignment 3 Search Engine :3</h1>
         <form id="search-form">
             <input type="text" id="query" placeholder="Enter search term" required />
             <button type="submit">Search</button>
         </form>
 
-
         <div id="errorMessage" class="error"></div>
+
+        <!-- Results will be shown here -->
         <div id="results" class="results"></div>
-    </div>
-    <div class="container">
-        <p> placeholder for chat gpt api thing for extra credit if time ? :> </p>
     </div>
 
     <script src="main.js"></script> <!-- Javascript file -->

@@ -1,10 +1,5 @@
 // Interface to structure the response from Flask
 
-interface SearchResult {
-    term: string;
-    frequency: number;
-    documents: number[];
-}
 
 document.getElementById('search-form')?.addEventListener('submit', function (event) {
     event.preventDefault();  // prevents form from refreshing when u submit
@@ -45,22 +40,25 @@ function performSearch(): void {
         });
 }
 
-function displayResults(results: string[], responseTime: string): void {
+
+interface SearchResult {
+    url: string;
+    summary: string;
+}
+
+
+function displayResults(result: SearchResult[], responseTime: string): void {
     const resultsDiv = document.getElementById('results');
     if (resultsDiv) {
-        if (results.length === 0) {
+        if (result.length === 0) {
             resultsDiv.innerHTML = "<p>No results found.</p>";
         } else {
-            resultsDiv.innerHTML = `<p>Response Time: ${responseTime} ms</p>` + results.map(url => `
+            resultsDiv.innerHTML = `<p>Response Time: ${responseTime} ms</p>` + result.map(result => `
             <div class="result">
-                    <a href="${url}" target="_blank">${url}</a>
+                    <a href="${result.url}" target="_blank">${result.url}</a>
+                    <p>${result.summary}</p>
             </div>  
             `).join('');
         }
     }
 }
-// <div class="result">
-//                     <h3>${result.term}</h3>
-//                     <p>Frequency: ${result.frequency}</p>
-//                     <p>Found in documents: ${result.documents.join(', ')}</p>
-//                 </div>

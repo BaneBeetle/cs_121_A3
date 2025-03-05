@@ -5,8 +5,10 @@ from search import boolean_retrieval, load_index
 from flask_cors import CORS
 import time
 
+
 app = Flask(__name__)
 CORS(app)
+
 
 # load inverted index into memory when server starts
 try:

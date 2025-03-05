@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 Unique Tokens: 722680
+=======
+Unique Tokens: 1075334
+>>>>>>> 83f60961480ac82650bed37f9567cb2d29c59997
 Number of Documents: 55393
 Index size on disk: 30758328 bytes (30037.43 KB)

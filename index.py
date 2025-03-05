@@ -16,6 +16,8 @@ nltk.download('punkt_tab', quiet=True)
 WORD_SET = set(words.words())
 
 PS = PorterStemmer()
+TOKEN_PATTERN = re.compile(r"[a-zA-Z0-9']+")
+
 
 # Adjust your base path here
 #BASE_PATH = r"/Users/galilearuiz/Desktop/uci/inf141/Assignment3/DEV"
@@ -24,9 +26,21 @@ BASE_PATH = r"C:\\Users\\lolly\\OneDrive\Desktop\\Projects\\CS121\A3\\cs_121_A3\
 
 from nltk.tokenize import word_tokenize
 
-def tokenize(text): # Sigh, removed my part A
+def tokenize1(text): # Should talk abt which one to use
     tokens = word_tokenize(text)
     return [PS.stem(token.lower()) for token in tokens if token.isalnum()]
+
+def tokenize(text):
+    """Extract and stem tokens from text using precompiled regex and filter with WORD_SET."""
+    tokens = TOKEN_PATTERN.findall(text)
+    result = []
+    for token in tokens:
+        token = token.replace("'", "").lower()
+        stemmed_token = PS.stem(token)
+        # if stemmed_token in WORD_SET:  # changed to add stemmed toke
+        result.append(stemmed_token)
+    return result
+
 
 def process_file(file_info):
     """

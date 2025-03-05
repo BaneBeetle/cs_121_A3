@@ -23,7 +23,7 @@ def summarize(urls):
 
     user_content = "\n".join([f"Generate a short summary for the page: {url}" for url in urls])
     try:
-        completion = client.chat.completions.create(model="gpt-4",
+        completion = client.chat.completions.create(model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": prompt},
             {"role": "user", "content": user_content}

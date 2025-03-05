@@ -2,7 +2,6 @@
 
 import os
 import json
-import re
 import sys
 import nltk
 from nltk.corpus import words
@@ -11,30 +10,23 @@ from bs4 import BeautifulSoup
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
-# Download required NLTK data and initialize objects
 nltk.download('words', quiet=True)
+nltk.download('punkt', quiet=True)
+nltk.download('punkt_tab', quiet=True)
 WORD_SET = set(words.words())
 
 PS = PorterStemmer()
-# Precompile the token regex
-TOKEN_PATTERN = re.compile(r"[a-zA-Z0-9']+")
 
 # Adjust your base path here
-BASE_PATH = r"/Users/galilearuiz/Desktop/uci/inf141/Assignment3/DEV"
+#BASE_PATH = r"/Users/galilearuiz/Desktop/uci/inf141/Assignment3/DEV"
 
-# r"C:\Users\lolly\OneDrive\Desktop\Projects\CS121\A3\cs_121_A3\.gitignore\DEV"
+BASE_PATH = r"C:\\Users\\lolly\\OneDrive\Desktop\\Projects\\CS121\A3\\cs_121_A3\\DEV"
 
+from nltk.tokenize import word_tokenize
 
-def tokenize(text):
-    """Extract and stem tokens from text using precompiled regex and filter with WORD_SET."""
-    tokens = TOKEN_PATTERN.findall(text)
-    result = []
-    for token in tokens:
-        token = token.replace("'", "").lower()
-        if token in WORD_SET:  # Could be overly strict and exclude proper nouns like UCI, abbreviations
-            result.append(PS.stem(token))
-    return result
-
+def tokenize(text): # Sigh, removed my part A
+    tokens = word_tokenize(text)
+    return [PS.stem(token.lower()) for token in tokens if token.isalnum()]
 
 def process_file(file_info):
     """
@@ -83,15 +75,10 @@ def process_file(file_info):
         print(f"Error processing {file_path}: {e}")
         return {}, None, None
 
-
 def writer(index, filename="index.json"):  # storing everything using JSON might be more space efficient
     """Write the inverted index to a JSON file."""
     with open(filename, "w", encoding="utf-8") as f:
-        # for token, (freq, doc_ids) in index.items():
-        # line = f"{token} {freq} {' '.join(map(str, doc_ids))}\n"
-        # f.write(line)
         json.dump(index, f, indent=4)
-
 
 def indexer():
     # Gather all JSON file paths with their assigned document IDs
@@ -125,14 +112,8 @@ def indexer():
                     global_index[token] = {}
                 global_index[token].update(postings)  # merges per-token doc_id mappings
 
-            # for token, (freq, doc_ids) in partial_index.items():
-                # global_index[token][0] += freq
-                # global_index[token][1].update(doc_ids)
 
-    # Convert the sets to lists if desired
-    # final_index = {token: (freq, list(doc_ids)) for token, (freq, doc_ids) in global_index.items()}
-
-    # Report index size and document count
+    # Report index size and document count --- Used for M1
     index_size_bytes = sys.getsizeof(global_index)
     index_size_kb = index_size_bytes / 1024
     with open("report.txt", "w", encoding="utf-8") as f:
@@ -142,6 +123,6 @@ def indexer():
 
     return global_index
 
-
 if __name__ == "__main__":
-    writer(indexer())
+    invert_index = indexer()
+    writer(invert_index)

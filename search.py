@@ -66,6 +66,7 @@ def search(query):
     """
     main function to evaluate search
     """
+    
     index_file = 'index.json'
     inverted_index = load_index(index_file)
 

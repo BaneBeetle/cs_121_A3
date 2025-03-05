@@ -9,6 +9,9 @@ from nltk.stem import PorterStemmer
 from bs4 import BeautifulSoup
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
+import re
+import unicodedata
+
 
 nltk.download('words', quiet=True)
 nltk.download('punkt', quiet=True)
@@ -26,9 +29,14 @@ BASE_PATH = r"C:\\Users\\lolly\\OneDrive\Desktop\\Projects\\CS121\A3\\cs_121_A3\
 
 from nltk.tokenize import word_tokenize
 
+def normalize_text(text):
+    return unicodedata.normalize('NFKD', text)
+
 def tokenize1(text): # Should talk abt which one to use
+    text = normalize_text(text)
     tokens = word_tokenize(text)
-    return [PS.stem(token.lower()) for token in tokens if token.isalnum()]
+    #return [PS.stem(token.lower()) for token in tokens if token.isalnum()]
+    return [PS.stem(token.lower()) for token in tokens]
 
 def tokenize(text):
     """Extract and stem tokens from text using precompiled regex and filter with WORD_SET."""
@@ -64,12 +72,12 @@ def process_file(file_info):
 
         # Normal text tokens
         normal_text = soup.get_text(" ", strip=True)
-        normal_tokens = tokenize(normal_text)
+        normal_tokens = tokenize1(normal_text)
 
         # Extract important text tokens from designated tags
         important_tags = soup.find_all(['b', 'strong', 'h1', 'h2', 'h3', 'title'])
         important_text = " ".join(tag.get_text(" ", strip=True) for tag in important_tags)
-        important_tokens = tokenize(important_text)
+        important_tokens = tokenize1(important_text)
         
         # Count tokens; give extra weight (e.g., +2) for important tokens
         for token in normal_tokens:

@@ -11,7 +11,7 @@ from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import re
 import unicodedata
-
+from simhash import Simhash
 
 nltk.download('words', quiet=True)
 nltk.download('punkt', quiet=True)
@@ -105,46 +105,58 @@ def writer(index, filename="index.json"):  # storing everything using JSON might
 def indexer():
     # Gather all JSON file paths with their assigned document IDs
     file_list = []
-    doc_id = 0
-    # url_map = {} <- removed since urls are in index.json
+    doc_id = 0 # Made a counter to become an ID for the urls
 
     for root, dirs, files in os.walk(BASE_PATH):
         for file in files:
             if file.endswith('.json'):
                 file_path = os.path.join(root, file)
                 file_list.append((file_path, doc_id, BASE_PATH))
-                # Store relative path for reference
-                # url_map[doc_id] = os.path.relpath(file_path, BASE_PATH)
                 doc_id += 1
 
     global_index = defaultdict(dict)  # (lambda: [0, set()])  # token -> [frequency, set(doc_ids)]
     document_counter = doc_id
+    #simhashes = [] # Not from scratch, using similar logic to crawler
 
     # Use ProcessPoolExecutor to parallelize file processing
-    with ProcessPoolExecutor() as executor:
-        futures = [executor.submit(process_file, info) for info in file_list]
+    with ProcessPoolExecutor() as executor: # We will use this to speed up the process. This one doesn't use GPU :/ but will allow multiple cores on cpu to be used
+        futures = [executor.submit(process_file, info) for info in file_list] # if you wanna know more theres documentation on this :D
         for future in as_completed(futures):
-            partial_index, file_id, _ = future.result()
+            partial_index, file_id, _ = future.result() # Partial index is the inverted index / dictionary mapping tokens to postings. file_id is just our counter
             if file_id is None:
-                continue  # skip files that caused errors
+                continue  # If no file_id, we don't need to SIMHASH
 
-            # Merge partial index into global index
+            #s = Simhash(list(partial_index.keys()))
+            #skip = False
+
+            ### Similar logic to crawler. If its too similar w/ an arbitrary distance, skip it
+            #for prev in simhashes:
+            #    if s.distance(prev) < 3:
+            #        skip = True
+            #        break
+            #if skip:
+            #    continue
+
+            #simhashes.append(s)
+
+            ### REMOVED SIMHASH! Checking similarity for 50k documents takes way too long.
             for token, postings in partial_index.items():
                 if token not in global_index:
                     global_index[token] = {}
                 global_index[token].update(postings)  # merges per-token doc_id mappings
 
-
     # Report index size and document count --- Used for M1
+    '''
     index_size_bytes = sys.getsizeof(global_index)
     index_size_kb = index_size_bytes / 1024
     with open("report.txt", "w", encoding="utf-8") as f:
         f.write(f"Unique Tokens: {len(global_index)}\n")
         f.write(f"Number of Documents: {document_counter}\n")
         f.write(f"Index size on disk: {index_size_bytes} bytes ({index_size_kb:.2f} KB)\n")
+    '''
 
-    return global_index
-
+    return global_index # return inverted_index to be written
+ 
 if __name__ == "__main__":
     invert_index = indexer()
     writer(invert_index)

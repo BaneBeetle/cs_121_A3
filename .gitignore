@@ -1,3 +1,4 @@
 .env
 DEV/
 gptkey.env
+index.json

@@ -1,11 +1,7 @@
 Galilea Ruiz
 Brian Phan
 
-nbjbjhbhhjb
-
-sometimes when we search, the same link pops up twice, the fragments are just different. idk if we need to change it so its
-unique links every time???
-
-
 How to Run:
-1.
+1. Run main.py
+2. Once you have ran main.py, search in your folders for "frontend" and double click index.html
+3. Once you have launched our front end, type your desired query in the search bar.

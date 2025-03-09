@@ -6,21 +6,38 @@ document.getElementById('search-form')?.addEventListener('submit', function (eve
     performSearch();
 });
 
+document.getElementById('summary-toggle')?.addEventListener('change', function () {
+    if ((this as HTMLInputElement).checked) {
+        displaySummaries(true);
+    } else {
+        displaySummaries(false);
+    }
+});
+
+let currentResults: SearchResult[] = [];
+
 function performSearch(): void {
     const query = (document.getElementById('query') as HTMLInputElement).value;
     const errorMessage = document.getElementById('errorMessage');
     const resultsDiv = document.getElementById('results');
+    const searchTimeDisplay = document.getElementById('search-time');
+    const searchWithSummaryTimeDisplay = document.getElementById('search-with-summary-time');
 
     // clear previous results
     if (resultsDiv) resultsDiv.innerHTML = '';
     if (errorMessage) errorMessage.innerHTML = '';
+    if (searchTimeDisplay) searchTimeDisplay.innerHTML = '';
+    if (searchWithSummaryTimeDisplay) searchWithSummaryTimeDisplay.innerHTML = '';
 
     // basic validation for query
     if (!query.trim()) {
         if (errorMessage) errorMessage.textContent = "Please enter a search term.";
         return;
     }
+
     const startTime = performance.now();
+
+
     // make a request to Flask backend
     fetch(`http://127.0.0.1:5000/search?query=${encodeURIComponent(query)}`)
         .then(response => response.json())
@@ -32,12 +49,21 @@ function performSearch(): void {
                 if (errorMessage) errorMessage.textContent = data.error;
                 return;
             }
-            displayResults(data.results, responseTime);
+            // Calculate search time
+            if (searchTimeDisplay) {
+                searchTimeDisplay.innerHTML = `Search Time: ${responseTime} ms`;
+            }
+
+            currentResults = data.results;
+            displayResults(currentResults, responseTime);
         })
+
+
         .catch(error => {
             if (errorMessage) errorMessage.textContent = "An error occurred during the search.";
-            console.error('Error:', error);
+                console.error('Error:', error);
         });
+
 }
 
 
@@ -49,6 +75,8 @@ interface SearchResult {
 
 function displayResults(result: SearchResult[], responseTime: string): void {
     const resultsDiv = document.getElementById('results');
+    const searchWithSummaryTimeDisplay = document.getElementById('search-with-summary-time');
+
     if (resultsDiv) {
         if (result.length === 0) {
             resultsDiv.innerHTML = "<p>No results found.</p>";
@@ -60,5 +88,21 @@ function displayResults(result: SearchResult[], responseTime: string): void {
             </div>  
             `).join('');
         }
+    }
+    if (searchWithSummaryTimeDisplay) {
+        searchWithSummaryTimeDisplay.innerHTML = `Search + GPT Summaries Time: ${responseTime} ms`;
+    }
+}
+
+function displaySummaries(show: boolean): void {
+    const resultsDiv = document.getElementById('results');
+
+    if (resultsDiv) {
+        resultsDiv.innerHTML = currentResults.map((res: any) => `
+        <div class="result-item">
+            <a href="${res.url}" target="_blank">${res.url}</a>
+            <p>${show ? res.summary : "Summary hidden"}</p>
+        </div>  
+        `).join('');
     }
 }

@@ -64,11 +64,11 @@ function displayResults(result, responseTime, fulltime) {
             resultsDiv.innerHTML = "<p>No results found.</p>";
         }
         else {
-            resultsDiv.innerHTML = "<p>Search Time: ".concat(responseTime, " ms</p>") + `<p>Search + Summary Time: ${fulltime} ms</p>` + result.map(function (result) { return "\n            <div class=\"result\">\n                    <a href=\"".concat(result.url, "\" target=\"_blank\">").concat(result.url, "</a>\n                    <p>").concat(result.summary, "</p>\n            </div>  \n            "); }).join('');
+            resultsDiv.innerHTML = "<p>Search Time: ".concat(responseTime, " ms</p>") + result.map(function (result) { return "\n            <div class=\"result\">\n                    <a href=\"".concat(result.url, "\" target=\"_blank\">").concat(result.url, "</a>\n                    <p>").concat(result.summary, "</p>\n            </div>  \n            "); }).join('');
         }
     }
     if (searchWithSummaryTimeDisplay) {
-        searchWithSummaryTimeDisplay.innerHTML = "Search + GPT Summaries Time: ".concat(responseTime, " ms");
+        searchWithSummaryTimeDisplay.innerHTML = "Search + GPT Summaries Time: ".concat(fulltime, " ms");
     }
 }
 function displaySummaries(show) {

@@ -75,7 +75,7 @@ function displayResults(result: SearchResult[], responseTime: string, fulltime:s
         if (result.length === 0) {
             resultsDiv.innerHTML = "<p>No results found.</p>";
         } else {
-            resultsDiv.innerHTML = `<p>Search Time: ${responseTime} ms</p>` + `<p>Search + Summary Time: ${fulltime} ms</p>` + result.map(result => `
+            resultsDiv.innerHTML = `<p>Search Time: ${responseTime} ms</p>` + result.map(result => `
             <div class="result">
                     <a href="${result.url}" target="_blank">${result.url}</a>
                     <p>${result.summary}</p>
@@ -84,7 +84,7 @@ function displayResults(result: SearchResult[], responseTime: string, fulltime:s
         }
     }
     if (searchWithSummaryTimeDisplay) {
-        searchWithSummaryTimeDisplay.innerHTML = `Search + GPT Summaries Time: ${responseTime} ms`;
+        searchWithSummaryTimeDisplay.innerHTML = `Search + GPT Summaries Time: ${fulltime} ms`;
     }
 }
 

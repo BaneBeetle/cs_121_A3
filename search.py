@@ -72,15 +72,17 @@ def search(query, inverted_index):
     results = boolean_retrieval(query, inverted_index)
     end_time = time.time()
     response_time = (end_time - start_time) * 1000
-    print(f"Boolean Retrieval {response_time}")
+    #print(f"Boolean Retrieval {response_time}")
 
     if results:
+        gpt_start = time.time()
         print("Top results:")
         top_5_urls = [result['url'] for result in results]
         print(top_5_urls)
-
+        
         # Get summaries using GPT for all URLs in one API call
         try:
+            
             summaries = summarize(top_5_urls)
             if not isinstance(summaries, list) or len(summaries) != len(top_5_urls):
                 raise ValueError("Invalid summary format or incorrect number of summaries")
@@ -96,8 +98,8 @@ def search(query, inverted_index):
 
         for result in results:
             print(f"URL: {result['url']}\nSummary: {result['summary']}\n")
-
-        return results
+        gpt_end = time.time()
+        return results, (gpt_end - gpt_start)
     else:
         print("No documents found for the query.")
         return []

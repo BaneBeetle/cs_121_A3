@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 import json
 
 # Ensure to load the .env file
-dotenv_path = "/Users/galilearuiz/Desktop/uci/inf141/Assignment3/gptkey.env" #CHANGE UR PATH
+#dotenv_path = "/Users/galilearuiz/Desktop/uci/inf141/Assignment3/gptkey.env" #CHANGE UR PATH
+dotenv_path = "C:\\Users\\lolly\\OneDrive\\Desktop\\Projects\\CS121\\A3\\cs_121_A3\\gptkey.env"
 load_dotenv(dotenv_path, override=True)
 
 # Check if the API key is loaded correctly
@@ -23,7 +24,7 @@ def summarize(urls):
 
     user_content = "\n".join([f"Generate a short summary for the page: {url}" for url in urls])
     try:
-        completion = client.chat.completions.create(model="gpt-4",
+        completion = client.chat.completions.create(model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": prompt},
             {"role": "user", "content": user_content}

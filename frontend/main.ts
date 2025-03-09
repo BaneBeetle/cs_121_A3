@@ -26,13 +26,13 @@ function performSearch(): void {
         .then(response => response.json())
         .then(data => {
             const endTime = performance.now();  // End timer
-            const responseTime = (endTime - startTime).toFixed(2);
-
+            const responseTime = (endTime - startTime);
+            const adjustedTime = (responseTime - data.gpt_time).toFixed(2); // gpt_time represents total time during summary creation
             if (data.error) {
                 if (errorMessage) errorMessage.textContent = data.error;
                 return;
             }
-            displayResults(data.results, responseTime);
+            displayResults(data.results, adjustedTime, responseTime);
         })
         .catch(error => {
             if (errorMessage) errorMessage.textContent = "An error occurred during the search.";
@@ -47,13 +47,13 @@ interface SearchResult {
 }
 
 
-function displayResults(result: SearchResult[], responseTime: string): void {
+function displayResults(result: SearchResult[], responseTime: string, fulltime:string): void {
     const resultsDiv = document.getElementById('results');
     if (resultsDiv) {
         if (result.length === 0) {
             resultsDiv.innerHTML = "<p>No results found.</p>";
         } else {
-            resultsDiv.innerHTML = `<p>Response Time: ${responseTime} ms</p>` + result.map(result => `
+            resultsDiv.innerHTML = `<p>Search Time: ${responseTime} ms</p>` + `<p>Search + Summary Time: ${fulltime} ms</p>` + result.map(result => `
             <div class="result">
                     <a href="${result.url}" target="_blank">${result.url}</a>
                     <p>${result.summary}</p>

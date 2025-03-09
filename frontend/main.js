@@ -25,14 +25,15 @@ function performSearch() {
         .then(function (response) { return response.json(); })
         .then(function (data) {
         var endTime = performance.now(); // End timer
-        var responseTime = (endTime - startTime).toFixed(2);
+        var responseTime = (endTime - startTime);
+        var adjustedTime = (responseTime - data.gpt_time).toFixed(2); // gpt_time represents total time during summary creation
         if (data.error) {
             if (errorMessage)
                 errorMessage.textContent = data.error;
             return;
         }
         console.log("Search Results:", data); // Debugging log
-        displayResults(data.results, responseTime);
+        displayResults(data.results, adjustedTime, responseTime);
     })
         .catch(function (error) {
         if (errorMessage)
@@ -40,7 +41,7 @@ function performSearch() {
         console.error('Error:', error);
     });
 }
-function displayResults(result, responseTime) {
+function displayResults(result, responseTime, fulltime) {
     var resultsDiv = document.getElementById('results');
     if (resultsDiv) {
         if (result.length === 0) {
@@ -48,7 +49,7 @@ function displayResults(result, responseTime) {
             resultsDiv.innerHTML = "<p>No results found.</p>";
         }
         else {
-            resultsDiv.innerHTML = "<p>Response Time: ".concat(responseTime, " ms</p>") + result.map(function (result) { return "\n            <div class=\"result\">\n                    <a href=\"".concat(result.url, "\" target=\"_blank\">").concat(result.url, "</a>\n                    <p>").concat(result.summary, "</p>\n            </div>  \n            "); }).join('');
+            resultsDiv.innerHTML = "<p>Search Time: ".concat(responseTime, " ms</p>") + `<p>Search + Summary Time: ${fulltime} ms</p>` + result.map(function (result) { return "\n            <div class=\"result\">\n                    <a href=\"".concat(result.url, "\" target=\"_blank\">").concat(result.url, "</a>\n                    <p>").concat(result.summary, "</p>\n            </div>  \n            "); }).join('');
         }
     }
 }

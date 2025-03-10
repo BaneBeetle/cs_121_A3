@@ -40,7 +40,7 @@ def boolean_retrieval(query, inverted_index, top_k=5, total_docs=55393):
     result_docs = set.intersection(*sorted(doc_sets, key=len))
     ranked_results = sorted(result_docs, key=lambda doc: doc_tfidf.get(doc, 0), reverse=True)
     final_results = [{"url": doc_urls[doc_id]} for doc_id in ranked_results if doc_id in doc_urls]
-    from simhash import Simhash
+
     unique_results = []
     simhashes = []
     for result in final_results:
@@ -51,6 +51,7 @@ def boolean_retrieval(query, inverted_index, top_k=5, total_docs=55393):
         simhashes.append(s)
         if len(unique_results) == top_k:
             break
+        
     return unique_results
 
 

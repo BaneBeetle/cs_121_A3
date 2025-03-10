@@ -41,14 +41,13 @@ function performSearch() {
         .then(function (data) {
         var endTime = performance.now(); // End timer
         var responseTime = (endTime - startTime);
-        var adjustedTime = (responseTime - data.gpt_time).toFixed(2); // gpt_time represents total time during summary creation
         if (data.error) {
             if (errorMessage)
                 errorMessage.textContent = data.error;
             return;
         }
         console.log("Search Results:", data); // Debugging log
-        displayResults(data.results, adjustedTime, responseTime);
+        displayResults(data.results, data.search_time, responseTime);
     })
         .catch(function (error) {
         if (errorMessage)

@@ -39,25 +39,16 @@ def search_query():
 
     # Perform Boolean retrieval with tf-idf ranking
     try:
-        results, gpt_time = search(query, inverted_index)
+        results, search_time = search(query, inverted_index)
 
-        print(f"Received results: {results}")
+        #print(f"Received results: {results}")
         end_time = time.time()
         response_time = (end_time - start_time) * 1000
         if not results:
             return jsonify({"error": "No results found"}), 404
-        print(f"Search query: '{query}', Response time: {response_time:.2f} ms")
-
-        #top_5_urls = [result['url'] for result in results[:5]]
-
-        #summaries = summarize(top_5_urls)
-
-        #for i, result in enumerate(results[:5]):
-        #    result['summary'] = summaries[i].get('response', 'Summary not available')
-
-        #print(f"Results with summaries: {results[:5]}")
+        print(f"Search query: '{query}', Response time: {search_time:.2f} ms")
  
-        return jsonify({"results": results[:5], "gpt_time": gpt_time * 1000})
+        return jsonify({"results": results[:5], "search_time": search_time})
 
 
     except Exception as e:

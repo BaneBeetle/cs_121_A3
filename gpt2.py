@@ -32,7 +32,7 @@ def summarize(urls):
 
         # parse the response as JSON
         response_text = completion.choices[0].message.content
-        print(f"Raw response from GPT: {response_text}")  # Debugging raw response
+        # print(f"Raw response from GPT: {response_text}")  # Debugging raw response
 
         # try to load the response as JSON
         response = json.loads(response_text)

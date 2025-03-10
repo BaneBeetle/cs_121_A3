@@ -116,34 +116,21 @@ def indexer():
 
     global_index = defaultdict(dict)  # (lambda: [0, set()])  # token -> [frequency, set(doc_ids)]
     document_counter = doc_id
-    #simhashes = [] # Not from scratch, using similar logic to crawler
 
     # Use ProcessPoolExecutor to parallelize file processing
-    with ProcessPoolExecutor() as executor: # We will use this to speed up the process. This one doesn't use GPU :/ but will allow multiple cores on cpu to be used
-        futures = [executor.submit(process_file, info) for info in file_list] # if you wanna know more theres documentation on this :D
+    with ProcessPoolExecutor() as executor:
+        futures = [executor.submit(process_file, info) for info in file_list]
         for future in as_completed(futures):
-            partial_index, file_id, _ = future.result() # Partial index is the inverted index / dictionary mapping tokens to postings. file_id is just our counter
+            partial_index, file_id, _ = future.result()
             if file_id is None:
-                continue  # If no file_id, we don't need to SIMHASH
+                continue  
 
-            #s = Simhash(list(partial_index.keys()))
-            #skip = False
 
-            ### Similar logic to crawler. If its too similar w/ an arbitrary distance, skip it
-            #for prev in simhashes:
-            #    if s.distance(prev) < 3:
-            #        skip = True
-            #        break
-            #if skip:
-            #    continue
-
-            #simhashes.append(s)
-
-            ### REMOVED SIMHASH! Checking similarity for 50k documents takes way too long.
             for token, postings in partial_index.items():
                 if token not in global_index:
                     global_index[token] = {}
                 global_index[token].update(postings)  # merges per-token doc_id mappings
+
 
     # Report index size and document count --- Used for M1
     '''
@@ -154,8 +141,8 @@ def indexer():
         f.write(f"Number of Documents: {document_counter}\n")
         f.write(f"Index size on disk: {index_size_bytes} bytes ({index_size_kb:.2f} KB)\n")
     '''
-
-    return global_index # return inverted_index to be written
+    
+    return global_index
  
 if __name__ == "__main__":
     invert_index = indexer()

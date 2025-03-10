@@ -44,12 +44,11 @@ function performSearch(): void {
         .then(data => {
             const endTime = performance.now();  // End timer
             const responseTime = (endTime - startTime);
-            const adjustedTime = (responseTime - data.gpt_time).toFixed(2); // gpt_time represents total time during summary creation
             if (data.error) {
                 if (errorMessage) errorMessage.textContent = data.error;
                 return;
             }
-            displayResults(data.results, adjustedTime, responseTime);
+            displayResults(data.results, data.search_time, responseTime);
         })
 
 
